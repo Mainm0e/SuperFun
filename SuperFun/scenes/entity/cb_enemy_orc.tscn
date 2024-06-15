@@ -1,0 +1,104 @@
+[gd_scene load_steps=14 format=3 uid="uid://o3esqfm2415u"]
+
+[ext_resource type="Script" path="res://script/enemy.gd" id="1_22cg0"]
+[ext_resource type="Texture2D" uid="uid://djdjq4bvwjd31" path="res://Assets/sprites/Tiny RPG Character Asset Pack v1.02 -Free Soldier&Orc/Orc/Orc/Orc-Idle.png" id="1_c32tr"]
+[ext_resource type="PackedScene" uid="uid://bud5wfbpp1siw" path="res://scenes/area/kill_zone.tscn" id="2_h7nxn"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fcy28"]
+atlas = ExtResource("1_c32tr")
+region = Rect2(0, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m40bb"]
+atlas = ExtResource("1_c32tr")
+region = Rect2(100, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7nkto"]
+atlas = ExtResource("1_c32tr")
+region = Rect2(200, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1d33b"]
+atlas = ExtResource("1_c32tr")
+region = Rect2(300, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uhlp3"]
+atlas = ExtResource("1_c32tr")
+region = Rect2(400, 0, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_smehv"]
+atlas = ExtResource("1_c32tr")
+region = Rect2(500, 0, 100, 100)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_w7iq4"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fcy28")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m40bb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7nkto")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1d33b")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uhlp3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_smehv")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_f1ipe"]
+radius = 4.0
+height = 16.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_j4f6h"]
+radius = 4.0
+height = 16.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_73ccg"]
+radius = 4.0
+height = 16.0
+
+[node name="CB_Enemy_Orc" type="CharacterBody2D" groups=["Hit"]]
+script = ExtResource("1_22cg0")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_w7iq4")
+
+[node name="KillZone" parent="." instance=ExtResource("2_h7nxn")]
+
+[node name="Body" type="CollisionShape2D" parent="KillZone"]
+shape = SubResource("CapsuleShape2D_f1ipe")
+debug_color = Color(0.941138, 0.0149687, 0.605282, 0.42)
+
+[node name="Axe" type="CollisionShape2D" parent="KillZone"]
+position = Vector2(8, 1)
+rotation = -2.03505
+shape = SubResource("CapsuleShape2D_j4f6h")
+debug_color = Color(0.939455, 1.4343e-05, 0.6193, 0.42)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_73ccg")
+debug_color = Color(0.115223, 0.576923, 0.795795, 0.42)
+
+[node name="RayCastLeft" type="RayCast2D" parent="."]
+target_position = Vector2(-16, 0)
+
+[node name="RayCastRight" type="RayCast2D" parent="."]
+target_position = Vector2(24, 0)
+
+[node name="RayCastDown" type="RayCast2D" parent="."]
+target_position = Vector2(0, 10)
+
+[node name="Timer" type="Node" parent="."]
+
+[node name="iframe" type="Timer" parent="Timer"]
+
+[connection signal="timeout" from="Timer/iframe" to="." method="_on_iframe_timeout"]

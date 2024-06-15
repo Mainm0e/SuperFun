@@ -1,2 +1,19 @@
-# Godot 4+ specific ignores
-.godot/
+# Godot-specific files and folders
+.import/
+export/
+export_templates/
+# Godot-specific files
+*.import
+*.godot
+# Godot binary
+*.exe
+*.bin
+*.pck
+# OS-specific files
+.DS_Store
+Thumbs.db
+# System-specific files
+.idea/
+.vscode/
+# User-specific files
+*.log
