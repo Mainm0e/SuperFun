@@ -12,7 +12,6 @@ var attack_dmg = 10
 var is_attacking = false
 
 @onready var animated_sprite_2d = $AnimatedSprite2D
-@onready var sold_1 = $"."
 @onready var attack_aoe = $AnimatedSprite2D/AttackAOE/CollisionShape2D
 @onready var attack_timer = $timer/AttackTimer
 

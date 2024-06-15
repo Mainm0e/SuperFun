@@ -3,13 +3,16 @@ extends CharacterBody2D
 
 const SPEED = 60.0
 const JUMP_VELOCITY = -100.0
+#HitPoint
+var hitpoint = 100
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var direction = 1
-var hitpoint = 100
 # Iframe for delay income dmg from player
 var iframe = false
+var attack_dmg = 10
+var is_attacking = false
 @onready var ray_cast_left = $RayCastLeft
 @onready var ray_cast_right = $RayCastRight
 @onready var ray_cast_down = $RayCastDown
@@ -25,6 +28,13 @@ func _physics_process(delta):
 		animated_sprite_2d.flip_h = false
 	elif direction < 0:
 		animated_sprite_2d.flip_h = true
+	
+	if not is_attacking:
+		if is_on_floor():
+			if direction == 0:
+				animated_sprite_2d.play("default")
+			else:
+				animated_sprite_2d.play("walk")
 
 	move_and_slide()
 
@@ -41,10 +51,12 @@ func _process(delta):
 func get_hit(dmg):
 	if not iframe:
 		hitpoint = hitpoint - dmg
-		print("I got Hit ", str(hitpoint))
+		is_attacking = true
+		animated_sprite_2d.play("hurt")
 		iframe = true
 		iframe_time.start(0.5)
 
 
 func _on_iframe_timeout():
 	iframe = false
+	is_attacking = false
