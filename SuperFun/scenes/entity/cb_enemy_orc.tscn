@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=3 uid="uid://o3esqfm2415u"]
+[gd_scene load_steps=39 format=3 uid="uid://o3esqfm2415u"]
 
 [ext_resource type="Script" path="res://script/enemy.gd" id="1_22cg0"]
 [ext_resource type="Texture2D" uid="uid://djdjq4bvwjd31" path="res://Assets/sprites/Tiny RPG Character Asset Pack v1.02 -Free Soldier&Orc/Orc/Orc/Orc-Idle.png" id="1_c32tr"]
@@ -235,13 +235,20 @@ animations = [{
 radius = 4.0
 height = 14.0
 
-[node name="CB_Enemy_Orc" type="CharacterBody2D" groups=["Hit"]]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cl4dn"]
+size = Vector2(86, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3uqpw"]
+size = Vector2(13, 19)
+
+[node name="CB_Enemy_Orc" type="CharacterBody2D" groups=["Enemy"]]
 script = ExtResource("1_22cg0")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_w7iq4")
-animation = &"walk"
-frame_progress = 0.504078
+animation = &"attack"
+frame = 5
+frame_progress = 1.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CapsuleShape2D_73ccg")
@@ -253,11 +260,34 @@ target_position = Vector2(-8, 0)
 [node name="RayCastRight" type="RayCast2D" parent="."]
 target_position = Vector2(24, 0)
 
-[node name="RayCastDown" type="RayCast2D" parent="."]
-target_position = Vector2(0, 10)
-
 [node name="Timer" type="Node" parent="."]
 
 [node name="iframe" type="Timer" parent="Timer"]
 
+[node name="attack_cooldown" type="Timer" parent="Timer"]
+
+[node name="DetectTime" type="Timer" parent="Timer"]
+
+[node name="PlayerDetectionArea" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetectionArea"]
+shape = SubResource("RectangleShape2D_cl4dn")
+debug_color = Color(0.595436, 0.372549, 1, 0.42)
+
+[node name="AttackAoe" type="Area2D" parent="."]
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackAoe"]
+position = Vector2(15.5, 1.5)
+shape = SubResource("RectangleShape2D_3uqpw")
+disabled = true
+debug_color = Color(0.953357, 0, 0.55398, 0.42)
+
 [connection signal="timeout" from="Timer/iframe" to="." method="_on_iframe_timeout"]
+[connection signal="timeout" from="Timer/attack_cooldown" to="." method="_on_attack_cooldown_timeout"]
+[connection signal="timeout" from="Timer/DetectTime" to="." method="_on_detect_time_timeout"]
+[connection signal="body_entered" from="PlayerDetectionArea" to="." method="_on_player_detection_area_body_entered"]
+[connection signal="body_exited" from="PlayerDetectionArea" to="." method="_on_player_detection_area_body_exited"]
+[connection signal="body_entered" from="AttackAoe" to="." method="_on_attack_aoe_body_entered"]
